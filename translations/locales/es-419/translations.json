@@ -104,7 +104,8 @@
     "SketchFailedSave": "Fallo al guardar el bosquejo.",
     "AutosaveEnabled": "Grabado automático activado.",
     "LangChange": "Lenguaje cambiado",
-    "SettingsSaved": "Configuración guardada."
+    "SettingsSaved": "Configuración guardada.",
+    "DuplicateToEdit":"Duplicate to edit"
   },
   "Toolbar": {
     "Preview": "Vista previa",

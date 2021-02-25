@@ -10,6 +10,8 @@ import {
 } from './ide';
 import { setProjectSavedTime } from './project';
 import { createError } from './ide';
+import { getIsUserOwner } from '../../../modules/IDE/selectors/users';
+import { showToast, setToastText } from './toast';
 
 function appendToFilename(filename, string) {
   const dotIndex = filename.lastIndexOf('.');
@@ -89,24 +91,32 @@ export function handleCreateFile(formProps, setSelected = true) {
     const { files } = state;
     const { parentId } = state.ide;
     const projectId = state.project.id;
+    const isUserOwner = getIsUserOwner(state);
     return new Promise((resolve) => {
-      submitFile(formProps, files, parentId, projectId)
-        .then((response) => {
-          const { file, updatedAt } = response;
-          dispatch(createFile(file, parentId));
-          if (updatedAt) dispatch(setProjectSavedTime(updatedAt));
-          dispatch(closeNewFileModal());
-          dispatch(setUnsavedChanges(true));
-          if (setSelected) {
-            dispatch(setSelectedFile(file.id));
-          }
-          resolve();
-        })
-        .catch((error) => {
-          const { response } = error;
-          dispatch(createError(response.data));
-          resolve({ error });
-        });
+      console.log(state);
+      if (isUserOwner || !projectId) {
+        submitFile(formProps, files, parentId, projectId)
+          .then((response) => {
+            const { file, updatedAt } = response;
+            dispatch(createFile(file, parentId));
+            if (updatedAt) dispatch(setProjectSavedTime(updatedAt));
+            dispatch(closeNewFileModal());
+            dispatch(setUnsavedChanges(true));
+            if (setSelected) {
+              dispatch(setSelectedFile(file.id));
+            }
+            resolve();
+          })
+          .catch((error) => {
+            const { response } = error;
+            dispatch(createError(response.data));
+            resolve({ error });
+          });
+      } else {
+        dispatch(showToast(5500));
+        dispatch(setToastText('Toast.DuplicateToEdit'));
+        dispatch(closeNewFileModal());
+      }
     });
   };
 }

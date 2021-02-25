@@ -104,7 +104,8 @@
       "SketchFailedSave": "スケッチの保存に失敗しました",
       "AutosaveEnabled": "自動保存を有効にしました",
       "LangChange": "言語を変更しました",
-      "SettingsSaved": "設定を保存しました"
+      "SettingsSaved": "設定を保存しました",
+      "DuplicateToEdit":"Duplicate to edit"
     },
     "Toolbar": {
       "Preview": "プレビュー",
