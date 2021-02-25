@@ -65,7 +65,9 @@ class IDEView extends React.Component {
     this.handleGlobalKeydown = this.handleGlobalKeydown.bind(this);
 
     this.state = {
-      consoleSize: props.ide.consoleIsExpanded ? 150 : 29,
+      consoleSize: props.ide.consoleIsExpanded
+        ? this.props.preferences.consoleSize
+        : 29,
       sidebarSize: props.ide.sidebarIsExpanded ? 160 : 20
     };
   }
@@ -100,12 +102,6 @@ class IDEView extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.location !== this.props.location) {
       this.props.setPreviousPath(this.props.location.pathname);
-    }
-
-    if (this.props.ide.consoleIsExpanded !== nextProps.ide.consoleIsExpanded) {
-      this.setState({
-        consoleSize: nextProps.ide.consoleIsExpanded ? 150 : 29
-      });
     }
 
     if (this.props.ide.sidebarIsExpanded !== nextProps.ide.sidebarIsExpanded) {
@@ -337,9 +333,12 @@ class IDEView extends React.Component {
               <SplitPane
                 split="horizontal"
                 primary="second"
-                size={this.state.consoleSize}
+                size={
+                  this.props.ide.consoleIsExpanded ? this.state.consoleSize : 29
+                }
                 minSize={29}
                 onChange={(size) => this.setState({ consoleSize: size })}
+                onDragFinished={this.props.setConsoleSize}
                 allowResize={this.props.ide.consoleIsExpanded}
                 className="editor-preview-subpanel"
               >
@@ -520,7 +519,8 @@ IDEView.propTypes = {
     theme: PropTypes.string.isRequired,
     autorefresh: PropTypes.bool.isRequired,
     language: PropTypes.string.isRequired,
-    autocloseBracketsQuotes: PropTypes.bool.isRequired
+    autocloseBracketsQuotes: PropTypes.bool.isRequired,
+    consoleSize: PropTypes.number.isRequired
   }).isRequired,
   closePreferences: PropTypes.func.isRequired,
   setAutocloseBracketsQuotes: PropTypes.func.isRequired,
@@ -533,6 +533,7 @@ IDEView.propTypes = {
   setGridOutput: PropTypes.func.isRequired,
   setSoundOutput: PropTypes.func.isRequired,
   setAllAccessibleOutput: PropTypes.func.isRequired,
+  setConsoleSize: PropTypes.func.isRequired,
   files: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,

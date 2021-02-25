@@ -247,3 +247,21 @@ export function setLanguage(value, { persistPreference = true } = {}) {
     }
   };
 }
+
+export function setConsoleSize(value) {
+  return (dispatch, getState) => { // eslint-disable-line
+    dispatch({
+      type: ActionTypes.SET_CONSOLE_SIZE,
+      value
+    });
+    const state = getState();
+    if (state.user.authenticated) {
+      const formParams = {
+        preferences: {
+          consoleSize: value
+        }
+      };
+      updatePreferences(formParams, dispatch);
+    }
+  };
+}

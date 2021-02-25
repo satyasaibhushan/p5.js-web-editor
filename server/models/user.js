@@ -75,7 +75,8 @@ const userSchema = new Schema(
       theme: { type: String, default: 'light' },
       autorefresh: { type: Boolean, default: false },
       language: { type: String, default: 'en-US' },
-      autocloseBracketsQuotes: { type: Boolean, default: true }
+      autocloseBracketsQuotes: { type: Boolean, default: true },
+      consoleSize: { type: Number, default: 150 }
     },
     totalSize: { type: Number, default: 0 }
   },

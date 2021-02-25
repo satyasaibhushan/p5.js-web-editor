@@ -12,7 +12,8 @@ const initialState = {
   theme: 'light',
   autorefresh: false,
   language: 'en-US',
-  autocloseBracketsQuotes: true
+  autocloseBracketsQuotes: true,
+  consoleSize: 150
 };
 
 const preferences = (state = initialState, action) => {
@@ -45,6 +46,8 @@ const preferences = (state = initialState, action) => {
       return Object.assign({}, state, {
         autocloseBracketsQuotes: action.value
       });
+    case ActionTypes.SET_CONSOLE_SIZE:
+      return Object.assign({}, state, { consoleSize: action.value });
     default:
       return state;
   }
