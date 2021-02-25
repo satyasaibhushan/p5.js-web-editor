@@ -93,7 +93,6 @@ export function handleCreateFile(formProps, setSelected = true) {
     const projectId = state.project.id;
     const isUserOwner = getIsUserOwner(state);
     return new Promise((resolve) => {
-      console.log(state);
       if (isUserOwner || !projectId) {
         submitFile(formProps, files, parentId, projectId)
           .then((response) => {
@@ -159,21 +158,28 @@ export function handleCreateFolder(formProps) {
     const { files } = state;
     const { parentId } = state.ide;
     const projectId = state.project.id;
+    const isUserOwner = getIsUserOwner(state);
     return new Promise((resolve) => {
-      submitFolder(formProps, files, parentId, projectId)
-        .then((response) => {
-          const { file, updatedAt } = response;
-          dispatch(createFile(file, parentId));
-          if (updatedAt) dispatch(setProjectSavedTime(updatedAt));
-          dispatch(closeNewFolderModal());
-          dispatch(setUnsavedChanges(true));
-          resolve();
-        })
-        .catch((error) => {
-          const { response } = error;
-          dispatch(createError(response.data));
-          resolve({ error });
-        });
+      if (isUserOwner || !projectId) {
+        submitFolder(formProps, files, parentId, projectId)
+          .then((response) => {
+            const { file, updatedAt } = response;
+            dispatch(createFile(file, parentId));
+            if (updatedAt) dispatch(setProjectSavedTime(updatedAt));
+            dispatch(closeNewFolderModal());
+            dispatch(setUnsavedChanges(true));
+            resolve();
+          })
+          .catch((error) => {
+            const { response } = error;
+            dispatch(createError(response.data));
+            resolve({ error });
+          });
+      } else {
+        dispatch(showToast(5500));
+        dispatch(setToastText('Toast.DuplicateToEdit'));
+        dispatch(closeNewFolderModal());
+      }
     });
   };
 }
