@@ -83,6 +83,14 @@ export function submitFile(formProps, files, parentId, projectId) {
   });
 }
 
+export function setUnsavedFileChanges(id, value) {
+  return {
+    type: ActionTypes.SET_UNSAVED_FILE_CHANGES,
+    id,
+    value
+  };
+}
+
 export function handleCreateFile(formProps, setSelected = true) {
   return (dispatch, getState) => {
     const state = getState();
@@ -97,6 +105,7 @@ export function handleCreateFile(formProps, setSelected = true) {
           if (updatedAt) dispatch(setProjectSavedTime(updatedAt));
           dispatch(closeNewFileModal());
           dispatch(setUnsavedChanges(true));
+          dispatch(setUnsavedFileChanges(file.id, true));
           if (setSelected) {
             dispatch(setSelectedFile(file.id));
           }
@@ -157,6 +166,7 @@ export function handleCreateFolder(formProps) {
           if (updatedAt) dispatch(setProjectSavedTime(updatedAt));
           dispatch(closeNewFolderModal());
           dispatch(setUnsavedChanges(true));
+          dispatch(setUnsavedFileChanges(file.id, true));
           resolve();
         })
         .catch((error) => {
@@ -171,6 +181,7 @@ export function handleCreateFolder(formProps) {
 export function updateFileName(id, name) {
   return (dispatch) => {
     dispatch(setUnsavedChanges(true));
+    dispatch(setUnsavedFileChanges(id, true));
     dispatch({
       type: ActionTypes.UPDATE_FILE_NAME,
       id,
@@ -245,12 +256,4 @@ export function getBlobUrl(file) {
   const fileBlob = blobUtil.createBlob([file.content], { type: 'text/plain' });
   const blobURL = blobUtil.createObjectURL(fileBlob);
   return blobURL;
-}
-
-export function setUnsavedFileChanges(id, value) {
-  return {
-    type: ActionTypes.SET_UNSAVED_FILE_CHANGES,
-    id,
-    value
-  };
 }
