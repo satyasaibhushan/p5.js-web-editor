@@ -10,6 +10,7 @@ import * as FileActions from '../actions/files';
 import DownArrowIcon from '../../../images/down-filled-triangle.svg';
 import FolderRightIcon from '../../../images/triangle-arrow-right.svg';
 import FolderDownIcon from '../../../images/triangle-arrow-down.svg';
+import UnsavedChangesDotIcon from '../../../images/unsaved-changes-dot.svg';
 import FileIcon from '../../../images/file.svg';
 
 function parseFileName(name) {
@@ -39,7 +40,7 @@ function parseFileName(name) {
   };
 }
 
-function FileName({ name }) {
+function FileName({ name, unsavedFileChanges, dotIconAriaLabel }) {
   const {
     baseName,
     firstLetter,
@@ -55,12 +56,28 @@ function FileName({ name }) {
       )}
       {baseName.length > 1 && <span>{lastLetter}</span>}
       {extension && <span>{extension}</span>}
+      <span className="editor__unsaved-changes">
+        {unsavedFileChanges ? (
+          <UnsavedChangesDotIcon
+            role="img"
+            aria-label={dotIconAriaLabel}
+            focusable="false"
+          />
+        ) : null}
+      </span>
     </span>
   );
 }
 
 FileName.propTypes = {
-  name: PropTypes.string.isRequired
+  dotIconAriaLabel: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  unsavedFileChanges: PropTypes.bool
+};
+
+FileName.defaultProps = {
+  dotIconAriaLabel: '',
+  unsavedFileChanges: false
 };
 
 class FileNode extends React.Component {
@@ -302,7 +319,11 @@ class FileNode extends React.Component {
               onClick={this.handleFileClick}
               data-testid="file-name"
             >
-              <FileName name={this.state.updatedName} />
+              <FileName
+                name={this.state.updatedName}
+                unsavedFileChanges={this.props.unsavedFileChanges}
+                dotIconAriaLabel={this.props.t('Editor.UnsavedChangesARIA')}
+              />
             </button>
             <input
               data-testid="input"
@@ -424,14 +445,16 @@ FileNode.propTypes = {
   openUploadFileModal: PropTypes.func.isRequired,
   authenticated: PropTypes.bool.isRequired,
   t: PropTypes.func.isRequired,
-  onClickFile: PropTypes.func
+  onClickFile: PropTypes.func,
+  unsavedFileChanges: PropTypes.bool
 };
 
 FileNode.defaultProps = {
   onClickFile: null,
   parentId: '0',
   isSelectedFile: false,
-  isFolderClosed: false
+  isFolderClosed: false,
+  unsavedFileChanges: false
 };
 
 function mapStateToProps(state, ownProps) {
@@ -440,6 +463,7 @@ function mapStateToProps(state, ownProps) {
     name: 'test',
     fileType: 'file'
   };
+  // console.log(fileNode);
   return Object.assign({}, fileNode, {
     authenticated: state.user.authenticated
   });

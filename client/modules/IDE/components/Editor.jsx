@@ -161,6 +161,7 @@ class Editor extends React.Component {
       'change',
       debounce(() => {
         this.props.setUnsavedChanges(true);
+        this.props.setUnsavedFileChanges(this.props.file.id, true);
         this.props.updateFileContent(this.props.file.id, this._cm.getValue());
         if (this.props.autorefresh && this.props.isPlaying) {
           this.props.clearConsole();
@@ -419,7 +420,7 @@ class Editor extends React.Component {
             <span>
               {this.props.file.name}
               <span className="editor__unsaved-changes">
-                {this.props.unsavedChanges ? (
+                {this.props.file.unsavedFileChanges ? (
                   <UnsavedChangesDotIcon
                     role="img"
                     aria-label={this.props.t('Editor.UnsavedChangesARIA')}
@@ -474,8 +475,10 @@ Editor.propTypes = {
     content: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     fileType: PropTypes.string.isRequired,
+    unsavedFileChanges: PropTypes.bool,
     url: PropTypes.string
   }).isRequired,
+  setUnsavedFileChanges: PropTypes.func.isRequired,
   editorOptionsVisible: PropTypes.bool.isRequired,
   showEditorOptions: PropTypes.func.isRequired,
   closeEditorOptions: PropTypes.func.isRequired,
