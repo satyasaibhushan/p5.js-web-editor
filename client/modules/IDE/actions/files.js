@@ -246,3 +246,11 @@ export function getBlobUrl(file) {
   const blobURL = blobUtil.createObjectURL(fileBlob);
   return blobURL;
 }
+
+export function setUnsavedFileChanges(id, value) {
+  return {
+    type: ActionTypes.SET_UNSAVED_FILE_CHANGES,
+    id,
+    value
+  };
+}

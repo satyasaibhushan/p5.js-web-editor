@@ -45,7 +45,8 @@ const initialState = () => {
       _id: r,
       children: [b, a, c],
       fileType: 'folder',
-      content: ''
+      content: '',
+      unsavedFileChanges: false
     },
     {
       name: 'sketch.js',
@@ -54,7 +55,8 @@ const initialState = () => {
       _id: a,
       isSelectedFile: true,
       fileType: 'file',
-      children: []
+      children: [],
+      unsavedFileChanges: false
     },
     {
       name: 'index.html',
@@ -62,7 +64,8 @@ const initialState = () => {
       id: b,
       _id: b,
       fileType: 'file',
-      children: []
+      children: [],
+      unsavedFileChanges: false
     },
     {
       name: 'style.css',
@@ -70,7 +73,8 @@ const initialState = () => {
       id: c,
       _id: c,
       fileType: 'file',
-      children: []
+      children: [],
+      unsavedFileChanges: false
     }
   ];
 };
@@ -229,6 +233,13 @@ const files = (state, action) => {
       return state.map((file) => {
         if (file.id === action.id) {
           return Object.assign({}, file, { isFolderClosed: true });
+        }
+        return file;
+      });
+    case ActionTypes.SET_UNSAVED_FILE_CHANGES:
+      return state.map((file) => {
+        if (file.id === action.id) {
+          return Object.assign({}, file, { unsavedFileChanges: true });
         }
         return file;
       });
