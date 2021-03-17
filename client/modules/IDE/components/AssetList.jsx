@@ -157,7 +157,7 @@ const AssetListRow = connect(
 class AssetList extends React.Component {
   constructor(props) {
     super(props);
-    this.props.getAssets();
+    if (!this.hasAssets()) this.props.getAssets();
   }
 
   getAssetsTitle() {

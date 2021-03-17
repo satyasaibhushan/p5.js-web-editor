@@ -30,7 +30,7 @@ class CollectionList extends React.Component {
       props.getProject(props.projectId);
     }
 
-    this.props.getCollections(this.props.username);
+    if (!this.hasCollections()) this.props.getCollections(this.props.username);
     this.props.resetSorting();
 
     this.state = {

@@ -358,7 +358,7 @@ const SketchListRow = connect(
 class SketchList extends React.Component {
   constructor(props) {
     super(props);
-    this.props.getProjects(this.props.username);
+    if (!this.hasSketches()) this.props.getProjects(this.props.username);
     this.props.resetSorting();
 
     this.state = {
